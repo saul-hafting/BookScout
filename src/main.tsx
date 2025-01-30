@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Provider } from "./components/ui/provider";
+import { Provider } from "./components/ui/provider"
 import App from "./App";
 import "./index.css";
 
