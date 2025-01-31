@@ -1,5 +1,6 @@
 import { Box, Flex, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
+import BookGrid from "./components/BookGrid";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
-        Main
+        <BookGrid />
       </GridItem>
     </Grid>
   );
