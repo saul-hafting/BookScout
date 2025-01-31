@@ -10,7 +10,8 @@ interface Props {
 }
 
 const BookGrid = ({ selectedGenre, searchQuery }: Props) => {
-  const { books, error, loading } = useBooks(selectedGenre, searchQuery);
+  const { books, error, loading } = useBooks(searchQuery, selectedGenre);
+
   const Skeletons = [1, 2, 3, 4, 5, 6];
 
   if (loading) return <Spinner />;

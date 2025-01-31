@@ -1,22 +1,10 @@
-import { useEffect, useState } from "react";
-import axios, { CanceledError } from "axios";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface Genre {
   id: string;
   name: string;
   image: string;
-}
-
-interface Book {
-  id: string;
-  volumeInfo: {
-    categories?: string[];
-    imageLinks?: { thumbnail?: string };
-  };
-}
-
-interface FetchGenresResponse {
-  items: Book[];
 }
 
 const useGenres = () => {
@@ -25,44 +13,19 @@ const useGenres = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const controller = new AbortController();
-
     const fetchGenres = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get<FetchGenresResponse>(
-          "https://www.googleapis.com/books/v1/volumes?q=*&maxResults=20", { signal: controller.signal }
-        );
-        if (response.data.items) {
-          const genreMap = new Map<string, string>();
-          response.data.items.forEach(book => {
-            book.volumeInfo.categories?.forEach(category => {
-              if (!genreMap.has(category) && book.volumeInfo.imageLinks?.thumbnail) {
-                genreMap.set(category, book.volumeInfo.imageLinks.thumbnail);
-              }
-            });
-          });
-          const genresArray = Array.from(genreMap.entries()).map(([name, image], index) => ({
-            id: index.toString(),
-            name,
-            image
-          }));
-          setGenres(genresArray);
-        } else {
-          setError("No genres found");
-        }
+        const response = await axios.get<Genre[]>("https://api.example.com/genres");
+        setGenres(response.data);
       } catch (err) {
-        if (err instanceof CanceledError) return;
         setError("Failed to fetch genres");
       } finally {
-        
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
+        setLoading(false);
       }
     };
 
     fetchGenres();
-    return () => controller.abort();
   }, []);
 
   return { genres, error, loading };
