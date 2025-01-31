@@ -1,26 +1,26 @@
-import { Grid, GridItem, useBreakpointValue, Box } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <Box bg="white" minH="100vh">
-      <Grid templateAreas={{
+    <Grid
+      templateAreas={{
         base: `"nav" "main"`,
-        lg: `"nav nav" "aside main"`
-      }}>
-        <GridItem area="nav">
-          <Navbar />
+        lg: `"nav nav" "aside main"`,
+      }}
+    >
+      <GridItem area="nav">
+        <Navbar />
+      </GridItem>
+      <Show above="lg">
+        <GridItem area="aside">
+          Aside
         </GridItem>
-        {useBreakpointValue({ base: null, lg: (
-          <GridItem area="aside" bg="gold">
-            Aside
-          </GridItem>
-        )})}
-        <GridItem area="main" bg="dodgerblue">
-          Main
-        </GridItem>
-      </Grid>
-    </Box>
+      </Show>
+      <GridItem area="main">
+        Main
+      </GridItem>
+    </Grid>
   );
 }
 
