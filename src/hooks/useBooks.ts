@@ -22,7 +22,7 @@ interface FetchBooksResponse {
   items: Book[];
 }
 
-const useBooks = (genre: string | null) => {
+const useBooks = (genre: string | null, query: string) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,9 +32,8 @@ const useBooks = (genre: string | null) => {
 
     const fetchBooks = async () => {
       try {
-        const query = genre ? `subject:${genre}` : '*';
         const response = await axios.get<FetchBooksResponse>(
-          `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20`, { signal: controller.signal }
+          `https://www.googleapis.com/books/v1/volumes?q=*&maxResults=20`, { signal: controller.signal }
         );
         if (response.data.items) {
           setBooks(response.data.items);
@@ -51,7 +50,7 @@ const useBooks = (genre: string | null) => {
 
     fetchBooks();
     return () => controller.abort();
-  }, [genre]);
+  }, [genre, query]);
 
   return { books, error, loading };
 };

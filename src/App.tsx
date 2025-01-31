@@ -6,6 +6,7 @@ import GenreList from './components/GenreList';
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   return (
       <Grid
@@ -19,7 +20,7 @@ function App() {
         }}
       >
         <GridItem area="nav">
-          <Navbar />
+          <Navbar/>
         </GridItem>
         <Show above="lg">
           <GridItem area="aside" p={4}>
@@ -27,7 +28,7 @@ function App() {
           </GridItem>
         </Show>
         <GridItem area="main" p={4}>
-          <BookGrid selectedGenre={selectedGenre} />
+          <BookGrid selectedGenre={selectedGenre} searchQuery={searchQuery} />
         </GridItem>
       </Grid>
   );
