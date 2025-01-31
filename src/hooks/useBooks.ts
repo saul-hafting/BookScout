@@ -3,7 +3,7 @@ import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
 
 
-interface Book {
+export interface Book {
     id: string;
     volumeInfo: {
       title: string;
@@ -29,7 +29,7 @@ const useBooks = () => {
     const fetchBooks = async () => {
       try {
         const response = await apiClient.get<FetchBooksResponse>(
-          "https://www.googleapis.com/books/v1/volumes?q=random&maxResults=20", {signal: controller.signal} 
+          "https://www.googleapis.com/books/v1/volumes?q=subject:fiction&maxResults=20", {signal: controller.signal} 
         );
         setBooks(response.data.items);
       } catch (err) {

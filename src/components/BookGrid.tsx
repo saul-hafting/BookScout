@@ -1,18 +1,20 @@
+import { SimpleGrid } from "@chakra-ui/react";
+import BookCard from "./bookCard";
 import useBooks from "../hooks/useBooks";
 
 
 const BookGrid = () => {
   const { books, error, loading } = useBooks();
-  
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <ul>
+    <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 5}} padding='10px' spacing={10}>
       {books.map((book) => (
-        <li key={book.id}>{book.volumeInfo.title}</li>
+        <BookCard key={book.id} book={book} />
       ))}
-    </ul>
+    </SimpleGrid>
 
     // <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
     //   {books.map((book) => (
