@@ -1,27 +1,35 @@
-import { Box, Flex, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
-import Navbar from "./components/Navbar";
-import BookGrid from "./components/BookGrid";
+import React, { useState } from 'react';
+import { Box, Grid, GridItem, Show } from '@chakra-ui/react';
+import Navbar from './components/Navbar';
+import BookGrid from './components/BookGrid';
+import GenreList from './components/GenreList';
 
 function App() {
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
   return (
-    <Grid
-      templateAreas={{
-        base: `"nav" "main"`,
-        lg: `"nav nav" "aside main"`,
-      }}
-    >
-      <GridItem area="nav">
-        <Navbar />
-      </GridItem>
-      <Show above="lg">
-        <GridItem area="aside">
-          Aside
+      <Grid
+        templateAreas={{
+          base: `"nav" "main"`,
+          lg: `"nav nav" "aside main"`,
+        }}
+        templateColumns={{
+          base: '1fr',
+          lg: '200px 1fr',
+        }}
+      >
+        <GridItem area="nav">
+          <Navbar />
         </GridItem>
-      </Show>
-      <GridItem area="main">
-        <BookGrid />
-      </GridItem>
-    </Grid>
+        <Show above="lg">
+          <GridItem area="aside" p={4}>
+            <GenreList onSelectGenre={setSelectedGenre} />
+          </GridItem>
+        </Show>
+        <GridItem area="main" p={4}>
+          <BookGrid selectedGenre={selectedGenre} />
+        </GridItem>
+      </Grid>
   );
 }
 

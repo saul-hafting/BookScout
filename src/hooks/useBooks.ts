@@ -1,25 +1,29 @@
-import { useEffect, useState } from "react";
-import apiClient from "../services/api-client";
-import { CanceledError } from "axios";
-
+import { useState, useEffect } from 'react';
+import axios, { CanceledError } from 'axios';
 
 export interface Book {
-    id: string;
-    volumeInfo: {
-      title: string;
-      authors?: string[];
-      description?: string;
-      imageLinks?: { thumbnail?: string };
-      infoLink?: string;
-    };
-  }
-  
-  interface FetchBooksResponse {
-    items: Book[];
-  }
+  id: string;
+  volumeInfo: {
+    title: string;
+    authors?: string[];
+    description?: string;
+    imageLinks?: { thumbnail?: string };
+    infoLink?: string;
+    pageCount?: number;
+    publishedDate?: string;
+    categories?: string[];
+  };
+  searchInfo?: {
+    textSnippet?: string;
+  };
+}
 
-const useBooks = () => {
-    const [books, setBooks] = useState<Book[]>([]);
+interface FetchBooksResponse {
+  items: Book[];
+}
+
+const useBooks = (genre: string | null) => {
+  const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -28,10 +32,15 @@ const useBooks = () => {
 
     const fetchBooks = async () => {
       try {
-        const response = await apiClient.get<FetchBooksResponse>(
-          "https://www.googleapis.com/books/v1/volumes?q=subject:fiction&maxResults=20", {signal: controller.signal} 
+        const query = genre ? `subject:${genre}` : '*';
+        const response = await axios.get<FetchBooksResponse>(
+          `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20`, { signal: controller.signal }
         );
-        setBooks(response.data.items);
+        if (response.data.items) {
+          setBooks(response.data.items);
+        } else {
+          setError("No books found");
+        }
       } catch (err) {
         if (err instanceof CanceledError) return;
         setError("Failed to fetch books");
@@ -42,9 +51,7 @@ const useBooks = () => {
 
     fetchBooks();
     return () => controller.abort();
-  }, []);
-
-  
+  }, [genre]);
 
   return { books, error, loading };
 };
